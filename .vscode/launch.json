@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Flask",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "1",
+                "REDIS_HOST": "redis",
+                "REDIS_PORT": "6379",
+                "REDIS_DB": "0",
+                "REDIS_PASSWORD": "devpassword",
+                "REDIS_URL": "redis://:devpassword@redis:6379/0",
+                "REDIS_BACKEND": "redis://:devpassword@redis:6379/0",
+                "EXPLICIT_FILTER": "false"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload",
+                "--host=0.0.0.0",
+                "--port=7171"
+            ],
+            "jinja": true
+        },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}
