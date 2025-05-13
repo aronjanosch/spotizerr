@@ -1,72 +1,23 @@
-version: "3.8"
+version: "3"
 
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-
     volumes:
       - ..:/workspace:cached
-      - app-creds:/workspace/creds
-      - app-config:/workspace/config
-      - app-downloads:/workspace/downloads
-      - app-logs:/workspace/logs
-
-    # Overrides default command so things don't shut down after the process ends
     command: sleep infinity
-
-    # Use the service-based networking so the app can reach redis by hostname
-    networks:
-      - spotizerr-dev
-
-    # Environment variables
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_DB=0
       - REDIS_PASSWORD=devpassword
       - REDIS_URL=redis://:devpassword@redis:6379/0
-      - REDIS_BACKEND=redis://:devpassword@redis:6379/0
-      - EXPLICIT_FILTER=false
-      - PYTHONPATH=/workspace
-      - FLASK_APP=app.py
-      - FLASK_ENV=development
-      - FLASK_DEBUG=1
-
-    # Use "forwardPorts" in devcontainer.json to forward port 7171
-    ports:
-      - "7171:7171"
-
-    # Connect to redis container
     depends_on:
       - redis
 
   redis:
     image: redis:alpine
-    restart: unless-stopped
-    environment:
-      - REDIS_PASSWORD=devpassword
-    volumes:
-      - redis-data:/data
-    command: redis-server --requirepass devpassword --appendonly yes
+    command: redis-server --requirepass devpassword
     ports:
       - "6379:6379"
-    networks:
-      - spotizerr-dev
-
-networks:
-  spotizerr-dev:
-    name: spotizerr-dev-network
-
-volumes:
-  redis-data:
-    name: spotizerr-redis-data
-  app-creds:
-    name: spotizerr-app-creds
-  app-config:
-    name: spotizerr-app-config
-  app-downloads:
-    name: spotizerr-app-downloads
-  app-logs:
-    name: spotizerr-app-logs
